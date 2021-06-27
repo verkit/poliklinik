@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "136275964820",
+    "project_id": "rsd-balung",
+    "storage_bucket": "rsd-balung.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:136275964820:android:2d1c436cd9d2da18585581",
+        "android_client_info": {
+          "package_name": "com.example.poli_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "136275964820-abrb6t9fb5b1n4vc1qa0c4tcgsu1275v.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCvNDIzrUZhHPbInck3sHoTSNDDMT4FDcU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "136275964820-abrb6t9fb5b1n4vc1qa0c4tcgsu1275v.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

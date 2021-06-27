@@ -1,0 +1,21 @@
+{
+  "pasien": {
+    "nama": "",
+    "tempat_lahir": "",
+    "tanggal_lahir": "",
+    "umur": "",
+    "jenis": "",
+    "kelamin": "",
+    "agama": "",
+    "alamat": "",
+    "kelurahan": "",
+    "kecamatan": "",
+    "kabupaten": "",
+    "provinsi": "",
+    "no_telp": "",
+    "nik": ""
+  },
+  "pembayaran" : "",
+  "tanggal_periksa": "",
+  "dokter": ""
+}

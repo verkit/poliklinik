@@ -1,0 +1,14 @@
+{
+  "nama": "",
+  "dokter": "",
+  "jenis_kelamin": "",
+  "jadwal": [
+    {
+      "hari": "",
+      "pukul": {
+        "buka": "",
+        "tutup": ""
+      }
+    }
+  ]
+}
