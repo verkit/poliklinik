@@ -4,8 +4,7 @@
     "tempat_lahir": "",
     "tanggal_lahir": "",
     "umur": "",
-    "jenis": "",
-    "kelamin": "",
+    "jenis_kelamin": "",
     "agama": "",
     "alamat": "",
     "kelurahan": "",
@@ -17,5 +16,6 @@
   },
   "pembayaran" : "",
   "tanggal_periksa": "",
-  "dokter": ""
+  "dokter": "",
+  "user_uid": ""
 }

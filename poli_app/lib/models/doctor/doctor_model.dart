@@ -1,19 +1,85 @@
-import 'package:freezed_annotation/freezed_annotation.dart';
+// To parse this JSON data, do
+//
+//     final doctorModel = doctorModelFromJson(jsonString);
 
-import 'jadwal.dart';
+import 'dart:convert';
 
-part 'doctor_model.freezed.dart';
-part 'doctor_model.g.dart';
+class DoctorModel {
+  DoctorModel({
+    this.nama,
+    this.dokter,
+    this.jenisKelamin,
+    this.jadwal,
+  });
 
-@freezed
-class DoctorModel with _$DoctorModel {
-  factory DoctorModel({
-    @JsonKey(name: 'nama') String? nama,
-    @JsonKey(name: 'dokter') String? dokter,
-    @JsonKey(name: 'jenis_kelamin') String? jenisKelamin,
-    @JsonKey(name: 'jadwal') List<Jadwal>? jadwal,
-  }) = _DoctorModel;
+  String? nama;
+  String? dokter;
+  String? jenisKelamin;
+  List<Jadwal>? jadwal;
 
-  factory DoctorModel.fromJson(Map<String, dynamic> json) =>
-      _$DoctorModelFromJson(json);
+  factory DoctorModel.fromRawJson(String str) => DoctorModel.fromJson(json.decode(str));
+
+  String toRawJson() => json.encode(toJson());
+
+  factory DoctorModel.fromJson(Map<String, dynamic> json) => DoctorModel(
+        nama: json["nama"],
+        dokter: json["dokter"],
+        jenisKelamin: json["jenis_kelamin"],
+        jadwal: List<Jadwal>.from(json["jadwal"].map((x) => Jadwal.fromJson(x))),
+      );
+
+  Map<String, dynamic> toJson() => {
+        "nama": nama,
+        "dokter": dokter,
+        "jenis_kelamin": jenisKelamin,
+        "jadwal": List<dynamic>.from(jadwal!.map((x) => x.toJson())),
+      };
+}
+
+class Jadwal {
+  Jadwal({
+    this.hari,
+    this.pukul,
+  });
+
+  String? hari;
+  Pukul? pukul;
+
+  factory Jadwal.fromRawJson(String str) => Jadwal.fromJson(json.decode(str));
+
+  String toRawJson() => json.encode(toJson());
+
+  factory Jadwal.fromJson(Map<String, dynamic> json) => Jadwal(
+        hari: json["hari"],
+        pukul: Pukul.fromJson(json["pukul"]),
+      );
+
+  Map<String, dynamic> toJson() => {
+        "hari": hari,
+        "pukul": pukul!.toJson(),
+      };
+}
+
+class Pukul {
+  Pukul({
+    this.buka,
+    this.tutup,
+  });
+
+  String? buka;
+  String? tutup;
+
+  factory Pukul.fromRawJson(String str) => Pukul.fromJson(json.decode(str));
+
+  String toRawJson() => json.encode(toJson());
+
+  factory Pukul.fromJson(Map<String, dynamic> json) => Pukul(
+        buka: json["buka"],
+        tutup: json["tutup"],
+      );
+
+  Map<String, dynamic> toJson() => {
+        "buka": buka,
+        "tutup": tutup,
+      };
 }

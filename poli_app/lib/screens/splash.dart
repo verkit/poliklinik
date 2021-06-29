@@ -1,7 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:poli_app/services/auth.dart';
 
-class SplashScreen extends StatelessWidget {
+class SplashScreen extends StatefulWidget {
+  @override
+  _SplashScreenState createState() => _SplashScreenState();
+}
+
+class _SplashScreenState extends State<SplashScreen> {
+  @override
+  void initState() {
+    Future.delayed(Duration(seconds: 2), () {
+      AuthFirebase.checkCurrentUser();
+    });
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Center(

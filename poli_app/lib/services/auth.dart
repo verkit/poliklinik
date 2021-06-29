@@ -35,9 +35,8 @@ class AuthFirebase {
       var user = await _auth.currentUser;
       if (user != null) {
         Get.put<AuthController>(AuthController()).user.value = user;
-      } else {
-        await Get.toNamed(MyRouter.main);
       }
+      await Get.offAllNamed(MyRouter.main);
     } on FirebaseAuthException catch (e) {
       Snackbar.error(e.message);
     }

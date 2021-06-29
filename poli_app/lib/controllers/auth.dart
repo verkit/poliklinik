@@ -75,12 +75,4 @@ class AuthController extends GetxController {
     AuthFirebase.signOut();
     update();
   }
-
-  @override
-  void onInit() {
-    super.onInit();
-    Future.delayed(Duration(seconds: 2), () {
-      AuthFirebase.checkCurrentUser();
-    });
-  }
 }

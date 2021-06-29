@@ -4,7 +4,7 @@ import 'package:poli_app/controllers/auth.dart';
 import 'package:poli_app/models/doctor/doctor_model.dart';
 import 'package:poli_app/router.dart';
 import 'package:poli_app/screens/about.dart';
-import 'package:poli_app/screens/history/history.dart';
+import 'package:poli_app/screens/history.dart';
 import 'package:poli_app/screens/home/home.dart';
 import 'package:poli_app/strings.dart';
 

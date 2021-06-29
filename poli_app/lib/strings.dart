@@ -1,6 +1,4 @@
 import 'package:poli_app/models/doctor/doctor_model.dart';
-import 'package:poli_app/models/doctor/jadwal.dart';
-import 'package:poli_app/models/doctor/pukul.dart';
 import 'package:poli_app/models/polyclinic/polyclinic_model.dart';
 
 String profileRs =
@@ -18,6 +16,11 @@ List<String> payments = [
   'spm dinsos',
   'jampersal',
   'bpjs ketenagakerjaan'
+];
+
+List<String> jenisKelamin = [
+  'Pria',
+  'Wanita',
 ];
 
 List<PolyclinicModel> poliklinik = [

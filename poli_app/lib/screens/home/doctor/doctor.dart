@@ -36,11 +36,15 @@ class DoctorScreen extends GetView<MainController> {
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(doctors[i].nama!),
+                          Text(
+                            doctors[i].nama!,
+                            maxLines: 1,
+                          ),
                           SizedBox(height: 2),
                           Text(
                             doctors[i].dokter!,
                             style: TextStyle(fontSize: 13, color: Colors.grey),
+                            maxLines: 1,
                           ),
                         ],
                       )

@@ -62,7 +62,8 @@ class AboutScreen extends GetView {
                     children: [
                       Text(
                         'Alamat',
-                        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: 13),
                       ),
                       SizedBox(height: 4),
                       Text(
@@ -97,7 +98,8 @@ class AboutScreen extends GetView {
                     children: [
                       Text(
                         'Informasi',
-                        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: 13),
                       ),
                       SizedBox(height: 4),
                       Text(
@@ -132,7 +134,8 @@ class AboutScreen extends GetView {
                     children: [
                       Text(
                         'Informasi Pelayanan',
-                        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: 13),
                       ),
                       SizedBox(height: 4),
                       Text(

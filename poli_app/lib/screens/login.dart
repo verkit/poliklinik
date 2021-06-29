@@ -26,7 +26,8 @@ class LoginScreen extends GetView<AuthController> {
                     SizedBox(height: 8),
                     Text(
                       'RSD Balung Jember',
-                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                      style:
+                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                     ),
                     SizedBox(height: 12),
                     Text('Masukkan nomor hp anda sebelum melanjutkan'),
@@ -51,14 +52,16 @@ class LoginScreen extends GetView<AuthController> {
                       onPressed: () {
                         if (controller.hpForm.text.isEmpty) {
                           Snackbar.info('Harap masukkan nomor hp');
-                        } else if (controller.hpForm.text.length < 11 || controller.hpForm.text.length > 13) {
+                        } else if (controller.hpForm.text.length < 11 ||
+                            controller.hpForm.text.length > 13) {
                           Snackbar.info('Panjang nomor hp tidak valid');
                         } else {
                           controller.login(context, controller.hpForm.text);
                         }
                       },
                       child: Text('Masuk'),
-                      style: ElevatedButton.styleFrom(minimumSize: Size(Get.width, 40)),
+                      style: ElevatedButton.styleFrom(
+                          minimumSize: Size(Get.width, 40)),
                     )
                   ],
                 ),

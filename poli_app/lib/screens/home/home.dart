@@ -68,7 +68,7 @@ class HomeScreen extends GetView<MainController> {
                 InkWell(
                   onTap: () {
                     Get.put<AuthController>(AuthController()).user.value != null
-                        ? Get.toNamed(MyRouter.check)
+                        ? Get.offNamed(MyRouter.check)
                         : Get.toNamed(MyRouter.login);
                   },
                   child: ListTile(
