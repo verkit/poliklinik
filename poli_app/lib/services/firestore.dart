@@ -1,4 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:get/get.dart';
+import 'package:poli_app/controllers/auth.dart';
 import 'package:poli_app/models/check/check_model.dart';
 import 'package:poli_app/snackbar.dart';
 
@@ -14,7 +16,11 @@ class FirestoreService {
   static Future<List<CheckModel>?> getCheckHistory(String uid) async {
     try {
       List<CheckModel> check = [];
-      await FirebaseFirestore.instance.collection('checks').where('user_uid', isEqualTo: uid).get().then((value) {
+      await FirebaseFirestore.instance
+          .collection('checks')
+          .where('pasien.user_uid', isEqualTo: uid)
+          .get()
+          .then((value) {
         for (var item in value.docs) {
           check.add(CheckModel.fromJson(item.data()));
         }
@@ -31,7 +37,7 @@ class FirestoreService {
       var antrian;
       await FirebaseFirestore.instance
           .collection('checks')
-          .where('dokter.nama', isEqualTo: namaDokter)
+          // .where('dokter.nama', isEqualTo: namaDokter)
           .where('tanggal_periksa', isEqualTo: tanggal)
           .get()
           .then((value) {
@@ -46,6 +52,25 @@ class FirestoreService {
         }
       });
       return antrian;
+    } on FirebaseException catch (e) {
+      Snackbar.error(e.message);
+    }
+  }
+
+  static Future createUser(Pasien data) async {
+    try {
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(Get.put<AuthController>(AuthController()).user.value!.uid)
+          .set(data.toJson());
+    } on FirebaseException catch (e) {
+      Snackbar.error(e.message);
+    }
+  }
+
+  static Future updateUser(Pasien data) async {
+    try {
+      await FirebaseFirestore.instance.collection('users').doc(data.userUid).update(data.toJson());
     } on FirebaseException catch (e) {
       Snackbar.error(e.message);
     }

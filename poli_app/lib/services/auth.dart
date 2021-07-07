@@ -1,8 +1,11 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:poli_app/controllers/auth.dart';
+import 'package:poli_app/models/check/check_model.dart';
 import 'package:poli_app/router.dart';
+import 'package:poli_app/services/firestore.dart';
 import 'package:poli_app/snackbar.dart';
 
 class AuthFirebase {
@@ -11,11 +14,16 @@ class AuthFirebase {
     try {
       EasyLoading.show();
       UserCredential _userCredential = await _auth.signInWithCredential(credential);
-      if (_userCredential.user != null) {
-        Get.back();
-        Get.find<AuthController>().user.value = _userCredential.user;
-        Get.offAllNamed(MyRouter.main);
-      }
+      Get.back();
+      Get.find<AuthController>().user.value = _userCredential.user;
+      await getProfile(_userCredential.user!.uid).then((_) {
+        EasyLoading.dismiss();
+        if (_!.nama == null) {
+          Get.offAllNamed(MyRouter.editProfile, arguments: 'daftar');
+        } else {
+          Get.offAllNamed(MyRouter.main);
+        }
+      });
     } on FirebaseException catch (e) {
       Snackbar.error(e.message);
     } finally {
@@ -37,6 +45,23 @@ class AuthFirebase {
         Get.put<AuthController>(AuthController()).user.value = user;
       }
       await Get.offAllNamed(MyRouter.main);
+    } on FirebaseAuthException catch (e) {
+      Snackbar.error(e.message);
+    }
+  }
+
+  static Future<Pasien?> getProfile(String uid) async {
+    final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+    try {
+      Pasien p = Pasien();
+      await _firestore.collection('users').doc(uid).get().then((value) {
+        if (value.data() == null) {
+          FirestoreService.createUser(Pasien(userUid: uid));
+        } else {
+          p = Pasien.fromJson(value.data()!);
+        }
+      });
+      return p;
     } on FirebaseAuthException catch (e) {
       Snackbar.error(e.message);
     }

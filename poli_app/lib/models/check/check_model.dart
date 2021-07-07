@@ -7,16 +7,16 @@ class CheckModel {
     this.pasien,
     this.pembayaran,
     this.tanggalPeriksa,
+    this.tanggalDaftar,
     this.dokter,
-    this.userUid,
     this.antrian,
   });
 
   Pasien? pasien;
   String? pembayaran;
   String? tanggalPeriksa;
+  String? tanggalDaftar;
   DoctorModel? dokter;
-  String? userUid;
   int? antrian;
 
   factory CheckModel.fromRawJson(String str) => CheckModel.fromJson(json.decode(str));
@@ -27,16 +27,16 @@ class CheckModel {
       pasien: Pasien.fromJson(json["pasien"]),
       pembayaran: json["pembayaran"],
       tanggalPeriksa: json["tanggal_periksa"],
+      tanggalDaftar: json["tanggal_daftar"],
       dokter: DoctorModel.fromJson(json["dokter"]),
-      userUid: json["user_uid"],
       antrian: json["antrian"]);
 
   Map<String, dynamic> toJson() => {
         "pasien": pasien!.toJson(),
         "pembayaran": pembayaran,
         "tanggal_periksa": tanggalPeriksa,
+        "tanggal_daftar": tanggalDaftar,
         "dokter": dokter!.toJson(),
-        "user_uid": userUid,
         "antrian": antrian,
       };
 }
@@ -56,6 +56,7 @@ class Pasien {
     this.provinsi,
     this.noTelp,
     this.nik,
+    this.userUid,
   });
 
   String? nama;
@@ -71,6 +72,7 @@ class Pasien {
   String? provinsi;
   String? noTelp;
   String? nik;
+  String? userUid;
 
   factory Pasien.fromRawJson(String str) => Pasien.fromJson(json.decode(str));
 
@@ -90,6 +92,7 @@ class Pasien {
         provinsi: json["provinsi"],
         noTelp: json["no_telp"],
         nik: json["nik"],
+        userUid: json["user_uid"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -106,5 +109,6 @@ class Pasien {
         "provinsi": provinsi,
         "no_telp": noTelp,
         "nik": nik,
+        "user_uid": userUid,
       };
 }

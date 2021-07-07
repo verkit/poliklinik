@@ -14,30 +14,25 @@ class ClinicScreen extends GetView {
         itemBuilder: (_, i) {
           return Column(
             children: [
-              Column(
-                children: [
-                  Padding(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
-                    child: Row(
-                      children: [
-                        ClipRRect(
-                          borderRadius: BorderRadius.circular(24),
-                          child: Image.asset(
-                            poliklinik[i].gambar!,
-                            width: 48,
-                            height: 48,
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                        SizedBox(width: 12),
-                        Text(poliklinik[i].nama!)
-                      ],
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
+                child: Row(
+                  children: [
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(24),
+                      child: Image.asset(
+                        poliklinik[i].gambar!,
+                        width: 48,
+                        height: 48,
+                        fit: BoxFit.cover,
+                      ),
                     ),
-                  ),
-                  Container(color: Colors.grey[300], height: 1),
-                ],
-              )
+                    SizedBox(width: 12),
+                    Text(poliklinik[i].nama!)
+                  ],
+                ),
+              ),
+              Container(color: Colors.grey[300], height: 1),
             ],
           );
         },

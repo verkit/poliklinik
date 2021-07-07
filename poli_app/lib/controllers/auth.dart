@@ -4,6 +4,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
+import 'package:poli_app/models/check/check_model.dart';
 import 'package:poli_app/services/auth.dart';
 import 'package:poli_app/snackbar.dart';
 
@@ -13,6 +14,8 @@ class AuthController extends GetxController {
   Rxn<User> user = Rxn<User>();
 
   Stream<User?> authStateChanges = FirebaseAuth.instance.authStateChanges();
+
+  Rx<Pasien> profile = Pasien().obs;
 
   void login(BuildContext context, String phoneNumber) async {
     final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -68,7 +71,6 @@ class AuthController extends GetxController {
     } else {
       Snackbar.info('Nomor telepon tidak valid');
     }
-    print(regex.hasMatch(phoneNumber));
   }
 
   signOut() {

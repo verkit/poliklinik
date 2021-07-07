@@ -8,24 +8,12 @@ import 'package:poli_app/controllers/main.dart';
 import 'package:poli_app/models/check/check_model.dart';
 import 'package:poli_app/models/doctor/doctor_model.dart';
 import 'package:poli_app/router.dart';
+import 'package:poli_app/services/auth.dart';
 import 'package:poli_app/services/firestore.dart';
 import 'package:poli_app/strings.dart';
 
 class CheckController extends GetxController {
-  TextEditingController nama = TextEditingController();
-  TextEditingController tempatLahir = TextEditingController();
-  TextEditingController umur = TextEditingController();
-  TextEditingController tanggalLahir = TextEditingController();
-  TextEditingController agama = TextEditingController();
-  TextEditingController alamat = TextEditingController();
-  TextEditingController kelurahan = TextEditingController();
-  TextEditingController kecamatan = TextEditingController();
-  TextEditingController kabupaten = TextEditingController();
-  TextEditingController provinsi = TextEditingController();
-  TextEditingController noTelp = TextEditingController();
-  TextEditingController nik = TextEditingController();
   TextEditingController tanggal = TextEditingController();
-  // DateRangePickerController tanggalLahir = DateRangePickerController();
   final formKey = GlobalKey<FormState>();
 
   DoctorModel selectedDoctor = doctors.first;
@@ -56,31 +44,21 @@ class CheckController extends GetxController {
       EasyLoading.show();
       if (formKey.currentState!.validate()) {
         var antrian = await FirestoreService.getAmountChecks(selectedDoctor.nama!, tanggal.text);
-        CheckModel data = CheckModel(
-          dokter: selectedDoctor,
-          pembayaran: selectedPembayaran,
-          pasien: Pasien(
-            agama: agama.text,
-            alamat: alamat.text,
-            jenisKelamin: selectedJenisKelamin,
-            kabupaten: kabupaten.text,
-            kecamatan: kecamatan.text,
-            kelurahan: kelurahan.text,
-            nama: nama.text,
-            nik: nik.text,
-            noTelp: noTelp.text,
-            provinsi: provinsi.text,
-            tanggalLahir: tanggalLahir.text,
-            tempatLahir: tempatLahir.text,
-            umur: umur.text,
-          ),
-          tanggalPeriksa: tanggal.text,
-          userUid: Get.find<AuthController>().user.value!.uid,
-          antrian: antrian,
-        );
-        await FirestoreService.registerForCheck(data).whenComplete(() {
-          Get.put<MainController>(MainController()).selectedIndex.value = 2;
-          Get.offAllNamed(MyRouter.main);
+        Pasien pasien = Pasien();
+        await AuthFirebase.getProfile(Get.put<AuthController>(AuthController()).user.value!.uid).then((value) async {
+          pasien = value!;
+          CheckModel data = CheckModel(
+            dokter: selectedDoctor,
+            pembayaran: selectedPembayaran,
+            pasien: pasien,
+            tanggalPeriksa: tanggal.text,
+            antrian: antrian,
+            tanggalDaftar: DateFormat('dd-MM-yyyy').format(DateTime.now()),
+          );
+          await FirestoreService.registerForCheck(data).whenComplete(() {
+            Get.put<MainController>(MainController()).selectedIndex.value = 2;
+            Get.offAllNamed(MyRouter.main);
+          });
         });
       }
     } finally {
