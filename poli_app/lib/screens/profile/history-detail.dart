@@ -28,7 +28,7 @@ class HistoryDetailScreen extends GetView<HistoryController> {
                       image: DecorationImage(
                         fit: BoxFit.cover,
                         image: AssetImage(
-                          controller.selectedCheck.pasien!.jenisKelamin == "Pria"
+                          controller.selectedCheck.pasien!.jenisKelamin == "L"
                               ? 'assets/dokter cowok.jpg'
                               : 'assets/dokter cewek.jpg',
                         ),
@@ -101,6 +101,11 @@ class HistoryDetailScreen extends GetView<HistoryController> {
               Text(
                 controller.selectedCheck.pembayaran!,
                 style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold),
+              ),
+              SizedBox(height: 8),
+              Text(
+                controller.selectedCheck.selesai! ? 'Selesai' : 'Belum periksa',
+                style: TextStyle(color: controller.selectedCheck.selesai! ? Colors.green : Colors.red),
               ),
               SizedBox(height: 24),
               Center(

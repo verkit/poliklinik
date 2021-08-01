@@ -15,8 +15,9 @@ import 'package:poli_app/strings.dart';
 class CheckController extends GetxController {
   TextEditingController tanggal = TextEditingController();
   final formKey = GlobalKey<FormState>();
-
-  DoctorModel selectedDoctor = doctors.first;
+  bool isLoading = false;
+  // DoctorModel selectedDoctor = Get.find<MainController>().doctors.first;
+  DoctorModel selectedDoctor = DoctorModel();
   selectDoctor(DoctorModel value) {
     selectedDoctor = value;
     update();
@@ -53,6 +54,7 @@ class CheckController extends GetxController {
             pasien: pasien,
             tanggalPeriksa: tanggal.text,
             antrian: antrian,
+            selesai: false,
             tanggalDaftar: DateFormat('dd-MM-yyyy').format(DateTime.now()),
           );
           await FirestoreService.registerForCheck(data).whenComplete(() {
@@ -64,5 +66,14 @@ class CheckController extends GetxController {
     } finally {
       EasyLoading.dismiss();
     }
+  }
+
+  @override
+  void onInit() async {
+    isLoading = true;
+    Get.find<MainController>().doctors = await FirestoreService().getDoctors();
+    isLoading = false;
+    update();
+    super.onInit();
   }
 }

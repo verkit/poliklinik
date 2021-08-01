@@ -4,18 +4,22 @@
 
 import 'dart:convert';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class DoctorModel {
   DoctorModel({
     this.nama,
     this.dokter,
     this.jenisKelamin,
     this.jadwal,
+    this.id,
   });
 
   String? nama;
   String? dokter;
   String? jenisKelamin;
   List<Jadwal>? jadwal;
+  String? id;
 
   factory DoctorModel.fromRawJson(String str) => DoctorModel.fromJson(json.decode(str));
 
@@ -27,6 +31,16 @@ class DoctorModel {
         jenisKelamin: json["jenis_kelamin"],
         jadwal: List<Jadwal>.from(json["jadwal"].map((x) => Jadwal.fromJson(x))),
       );
+
+  factory DoctorModel.fromSnapshot(DocumentSnapshot snapshot) {
+    return DoctorModel(
+      id: snapshot.id,
+      nama: snapshot.get('nama'),
+      dokter: snapshot.get('dokter'),
+      jadwal: List<Jadwal>.from(snapshot.get('jadwal').map((x) => Jadwal.fromJson(x))),
+      jenisKelamin: snapshot.get('jenis_kelamin'),
+    );
+  }
 
   Map<String, dynamic> toJson() => {
         "nama": nama,

@@ -103,6 +103,11 @@ class _HistoryScreenState extends State<HistoryScreen> {
                                               style: TextStyle(fontSize: 12),
                                             ),
                                           ],
+                                        ),
+                                        SizedBox(height: 8),
+                                        Text(
+                                          check.selesai! ? 'Selesai' : 'Belum periksa',
+                                          style: TextStyle(color: check.selesai! ? Colors.green : Colors.red),
                                         )
                                       ],
                                     )

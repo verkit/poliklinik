@@ -1,0 +1,85 @@
+{
+  "project_info": {
+    "project_number": "136275964820",
+    "firebase_url": "https://rsd-balung-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "rsd-balung",
+    "storage_bucket": "rsd-balung.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:136275964820:android:2d1c436cd9d2da18585581",
+        "android_client_info": {
+          "package_name": "com.example.poli_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "136275964820-345av34kg8hoj81ub1t42cd5610d5k7q.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.poli_app",
+            "certificate_hash": "ea898c75ebbcd138cb45ae10cdaf651d15f41f98"
+          }
+        },
+        {
+          "client_id": "136275964820-kj8e25g1k45terhi7jtoe9a87pajmnsb.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.poli_app",
+            "certificate_hash": "4d61da9e1ea5c2b608325c7ccf7f65da286868a3"
+          }
+        },
+        {
+          "client_id": "136275964820-abrb6t9fb5b1n4vc1qa0c4tcgsu1275v.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCvNDIzrUZhHPbInck3sHoTSNDDMT4FDcU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "136275964820-abrb6t9fb5b1n4vc1qa0c4tcgsu1275v.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:136275964820:android:cdb2c473a5a69c55585581",
+        "android_client_info": {
+          "package_name": "com.example.rsbalung_admin"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "136275964820-abrb6t9fb5b1n4vc1qa0c4tcgsu1275v.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCvNDIzrUZhHPbInck3sHoTSNDDMT4FDcU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "136275964820-abrb6t9fb5b1n4vc1qa0c4tcgsu1275v.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -10,6 +10,7 @@ class CheckModel {
     this.tanggalDaftar,
     this.dokter,
     this.antrian,
+    this.selesai,
   });
 
   Pasien? pasien;
@@ -18,18 +19,21 @@ class CheckModel {
   String? tanggalDaftar;
   DoctorModel? dokter;
   int? antrian;
+  bool? selesai;
 
   factory CheckModel.fromRawJson(String str) => CheckModel.fromJson(json.decode(str));
 
   String toRawJson() => json.encode(toJson());
 
   factory CheckModel.fromJson(Map<String, dynamic> json) => CheckModel(
-      pasien: Pasien.fromJson(json["pasien"]),
-      pembayaran: json["pembayaran"],
-      tanggalPeriksa: json["tanggal_periksa"],
-      tanggalDaftar: json["tanggal_daftar"],
-      dokter: DoctorModel.fromJson(json["dokter"]),
-      antrian: json["antrian"]);
+        pasien: Pasien.fromJson(json["pasien"]),
+        pembayaran: json["pembayaran"],
+        tanggalPeriksa: json["tanggal_periksa"],
+        tanggalDaftar: json["tanggal_daftar"],
+        dokter: DoctorModel.fromJson(json["dokter"]),
+        antrian: json["antrian"],
+        selesai: json["selesai"],
+      );
 
   Map<String, dynamic> toJson() => {
         "pasien": pasien!.toJson(),
@@ -38,6 +42,7 @@ class CheckModel {
         "tanggal_daftar": tanggalDaftar,
         "dokter": dokter!.toJson(),
         "antrian": antrian,
+        "selesai": selesai,
       };
 }
 

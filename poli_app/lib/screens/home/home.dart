@@ -48,7 +48,10 @@ class HomeScreen extends GetView<MainController> {
                 ),
                 SizedBox(height: 8),
                 InkWell(
-                  onTap: () => Get.toNamed(MyRouter.doctor),
+                  onTap: () {
+                    controller.getDoctors();
+                    Get.toNamed(MyRouter.doctor);
+                  },
                   child: ListTile(
                     contentPadding: EdgeInsets.zero,
                     leading: ClipOval(
@@ -91,7 +94,10 @@ class HomeScreen extends GetView<MainController> {
                 ),
                 Container(color: Colors.grey[300], height: 1),
                 InkWell(
-                  onTap: () => Get.toNamed(MyRouter.polyclinic),
+                  onTap: () {
+                    controller.getPolyclinics();
+                    Get.toNamed(MyRouter.polyclinic);
+                  },
                   child: ListTile(
                     contentPadding: EdgeInsets.zero,
                     leading: ClipOval(

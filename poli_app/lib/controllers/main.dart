@@ -2,13 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:poli_app/controllers/auth.dart';
 import 'package:poli_app/models/doctor/doctor_model.dart';
+import 'package:poli_app/models/polyclinic/polyclinic_model.dart';
 import 'package:poli_app/router.dart';
 import 'package:poli_app/screens/about.dart';
 import 'package:poli_app/screens/home/doctor/profile.dart';
 import 'package:poli_app/screens/home/home.dart';
-import 'package:poli_app/strings.dart';
+import 'package:poli_app/services/firestore.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 class MainController extends GetxController {
+  FirestoreService repository = FirestoreService();
+
   //* Bottom Navigation Controll
   RxInt selectedIndex = 0.obs;
   void onItemTapped(int index) {
@@ -36,10 +40,54 @@ class MainController extends GetxController {
   ].obs;
   RxList<String> get image => _image;
 
+  bool isLoading = false;
+
   //* Select Doctor
+  List<DoctorModel> doctors = [];
   Rx<DoctorModel> selectedDoctor = DoctorModel().obs;
   detailDoctor(int index) {
     selectedDoctor.value = doctors[index];
     Get.toNamed(MyRouter.detailDoctor);
+  }
+
+  RefreshController refreshDoctor = RefreshController(initialRefresh: false);
+  void onRefreshDoctor() async {
+    doctors.clear();
+    doctors = await repository.getDoctors();
+    update();
+    refreshDoctor.refreshCompleted();
+  }
+
+  Future getDoctors() async {
+    isLoading = true;
+    update();
+    doctors = await repository.getDoctors();
+    isLoading = false;
+    print(doctors);
+    update();
+  }
+
+  List<PolyclinicModel> polyclinics = <PolyclinicModel>[];
+
+  Future getPolyclinics() async {
+    isLoading = true;
+    update();
+    polyclinics = await repository.getPolyclinics();
+    isLoading = false;
+    update();
+  }
+
+  RefreshController refreshPoli = RefreshController(initialRefresh: false);
+  onRefreshPoli() async {
+    polyclinics.clear();
+    polyclinics = await repository.getPolyclinics();
+    refreshPoli.refreshCompleted();
+    update();
+  }
+
+  @override
+  void onInit() {
+    getDoctors();
+    super.onInit();
   }
 }

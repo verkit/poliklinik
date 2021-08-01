@@ -8,7 +8,9 @@ import 'package:poli_app/router.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  EasyLoading.instance..dismissOnTap = false;
+  EasyLoading.instance
+    ..dismissOnTap = false
+    ..maskType = EasyLoadingMaskType.black;
   runApp(MyApp());
 }
 

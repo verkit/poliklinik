@@ -2,6 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
 import 'package:poli_app/controllers/auth.dart';
 import 'package:poli_app/models/check/check_model.dart';
+import 'package:poli_app/models/doctor/doctor_model.dart';
+import 'package:poli_app/models/polyclinic/polyclinic_model.dart';
 import 'package:poli_app/snackbar.dart';
 
 class FirestoreService {
@@ -73,6 +75,54 @@ class FirestoreService {
       await FirebaseFirestore.instance.collection('users').doc(data.userUid).update(data.toJson());
     } on FirebaseException catch (e) {
       Snackbar.error(e.message);
+    }
+  }
+
+  //!
+  //! Polyclinic
+  //!
+  Future<List<PolyclinicModel>> getPolyclinics() async {
+    List<PolyclinicModel> data = [];
+    try {
+      await FirebaseFirestore.instance.collection('polyclinics').get().then((value) {
+        for (var item in value.docs) {
+          data.add(PolyclinicModel.fromSnapshot(item));
+        }
+      });
+      return data;
+    } on FirebaseException catch (e) {
+      Snackbar.error(e.message);
+      return data;
+    }
+  }
+
+  //!
+  //! Doctor
+  //!
+  Future<List<DoctorModel>> getDoctors() async {
+    List<DoctorModel> data = [];
+    try {
+      await FirebaseFirestore.instance.collection('doctors').get().then((value) {
+        for (var item in value.docs) {
+          data.add(DoctorModel.fromSnapshot(item));
+        }
+      });
+      return data;
+    } on FirebaseException catch (e) {
+      Snackbar.error(e.message);
+      return data;
+    }
+  }
+
+  Future<DoctorModel> getDoctor(String uid) async {
+    DoctorModel data = DoctorModel();
+    try {
+      var refdata = await FirebaseFirestore.instance.collection('doctors').doc(uid).get();
+      data = DoctorModel.fromSnapshot(refdata);
+      return data;
+    } on FirebaseException catch (e) {
+      Snackbar.error(e.message);
+      return data;
     }
   }
 }
