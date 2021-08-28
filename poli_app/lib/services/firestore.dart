@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
 import 'package:poli_app/controllers/auth.dart';
@@ -5,6 +7,7 @@ import 'package:poli_app/models/check/check_model.dart';
 import 'package:poli_app/models/doctor/doctor_model.dart';
 import 'package:poli_app/models/polyclinic/polyclinic_model.dart';
 import 'package:poli_app/snackbar.dart';
+import 'package:poli_app/strings.dart';
 
 class FirestoreService {
   static Future registerForCheck(CheckModel data) async {
@@ -33,24 +36,48 @@ class FirestoreService {
     }
   }
 
-  static Future<int?> getAmountChecks(String namaDokter, String tanggal) async {
+  /// Mendapatkan total antrian pada tanggal yang sama
+  static Future<List<int>?> nomorAntrian(DoctorModel dokter, String tanggal) async {
     try {
-      List<CheckModel> checks = [];
-      var antrian;
+      List<int> antrian = [];
+
+      /// Mendapatkan antrian registrasi
       await FirebaseFirestore.instance
           .collection('checks')
-          // .where('dokter.nama', isEqualTo: namaDokter)
           .where('tanggal_periksa', isEqualTo: tanggal)
           .get()
           .then((value) {
+        List<CheckModel> _checks = [];
         if (value.docs.length != 0) {
           for (var item in value.docs) {
-            checks.add(CheckModel.fromJson(item.data()));
+            _checks.add(CheckModel.fromJson(item.data()));
           }
-          var a = checks.reduce((current, next) => current.antrian! > next.antrian! ? current : next);
-          antrian = a.antrian! + 1;
+          var a = _checks.reduce((current, next) => current.antrian! > next.antrian! ? current : next);
+          antrian.add(a.antrian! + 1);
         } else {
-          antrian = 1;
+          antrian.add(1);
+        }
+      });
+
+      /// Mendapatkan antrian poli
+      await FirebaseFirestore.instance
+          .collection('checks')
+          .where('dokter.poliklinik', isEqualTo: dokter.poliklinik)
+          .where('tanggal_periksa', isEqualTo: tanggal)
+          .get()
+          .then((value) {
+        List<CheckModel> _checks = [];
+        if (value.docs.length != 0) {
+          for (var item in value.docs) {
+            _checks.add(CheckModel.fromJson(item.data()));
+          }
+          var poli = _checks.reduce((current, next) => current.antrian_poli! > next.antrian_poli! ? current : next);
+          print(poli.antrian_poli);
+          antrian.add(poli.antrian_poli! + 1);
+          print(antrian);
+        } else {
+          antrian.add(1);
+          print(antrian);
         }
       });
       return antrian;
@@ -81,7 +108,7 @@ class FirestoreService {
   //!
   //! Polyclinic
   //!
-  Future<List<PolyclinicModel>> getPolyclinics() async {
+  static Future<List<PolyclinicModel>> getPolyclinics() async {
     List<PolyclinicModel> data = [];
     try {
       await FirebaseFirestore.instance.collection('polyclinics').get().then((value) {
@@ -99,7 +126,7 @@ class FirestoreService {
   //!
   //! Doctor
   //!
-  Future<List<DoctorModel>> getDoctors() async {
+  static Future<List<DoctorModel>> getDoctors() async {
     List<DoctorModel> data = [];
     try {
       await FirebaseFirestore.instance.collection('doctors').get().then((value) {
@@ -114,7 +141,7 @@ class FirestoreService {
     }
   }
 
-  Future<DoctorModel> getDoctor(String uid) async {
+  static Future<DoctorModel> getDoctor(String uid) async {
     DoctorModel data = DoctorModel();
     try {
       var refdata = await FirebaseFirestore.instance.collection('doctors').doc(uid).get();
@@ -123,6 +150,23 @@ class FirestoreService {
     } on FirebaseException catch (e) {
       Snackbar.error(e.message);
       return data;
+    }
+  }
+
+  Future sendDataDummy() async {
+    try {
+      for (var item in poliklinik) {
+        await FirebaseFirestore.instance.collection('polyclinics').add(item.toJson()).then(
+          (value) async {
+            var dokter = doctors.where((element) => element.poliklinik == item.nama).toList();
+            for (var d in dokter) {
+              await FirebaseFirestore.instance.collection('doctors').add(d.toJson());
+            }
+          },
+        );
+      }
+    } catch (e) {
+      printError(info: e.toString());
     }
   }
 }

@@ -10,6 +10,7 @@ class CheckModel {
     this.tanggalDaftar,
     this.dokter,
     this.antrian,
+    this.antrian_poli,
     this.selesai,
   });
 
@@ -19,6 +20,7 @@ class CheckModel {
   String? tanggalDaftar;
   DoctorModel? dokter;
   int? antrian;
+  int? antrian_poli;
   bool? selesai;
 
   factory CheckModel.fromRawJson(String str) => CheckModel.fromJson(json.decode(str));
@@ -32,6 +34,7 @@ class CheckModel {
         tanggalDaftar: json["tanggal_daftar"],
         dokter: DoctorModel.fromJson(json["dokter"]),
         antrian: json["antrian"],
+        antrian_poli: json["antrian_poli"],
         selesai: json["selesai"],
       );
 
@@ -42,6 +45,7 @@ class CheckModel {
         "tanggal_daftar": tanggalDaftar,
         "dokter": dokter!.toJson(),
         "antrian": antrian,
+        "antrian_poli": antrian_poli,
         "selesai": selesai,
       };
 }

@@ -52,6 +52,10 @@ class HomeScreen extends GetView<MainController> {
                     controller.getDoctors();
                     Get.toNamed(MyRouter.doctor);
                   },
+                  // onLongPress: () {
+                  //   EasyLoading.show();
+                  //   FirestoreService().sendDataDummy().whenComplete(() => EasyLoading.dismiss());
+                  // },
                   child: ListTile(
                     contentPadding: EdgeInsets.zero,
                     leading: ClipOval(

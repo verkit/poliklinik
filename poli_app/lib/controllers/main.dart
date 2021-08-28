@@ -11,8 +11,6 @@ import 'package:poli_app/services/firestore.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 class MainController extends GetxController {
-  FirestoreService repository = FirestoreService();
-
   //* Bottom Navigation Controll
   RxInt selectedIndex = 0.obs;
   void onItemTapped(int index) {
@@ -53,7 +51,7 @@ class MainController extends GetxController {
   RefreshController refreshDoctor = RefreshController(initialRefresh: false);
   void onRefreshDoctor() async {
     doctors.clear();
-    doctors = await repository.getDoctors();
+    doctors = await FirestoreService.getDoctors();
     update();
     refreshDoctor.refreshCompleted();
   }
@@ -61,7 +59,7 @@ class MainController extends GetxController {
   Future getDoctors() async {
     isLoading = true;
     update();
-    doctors = await repository.getDoctors();
+    doctors = await FirestoreService.getDoctors();
     isLoading = false;
     print(doctors);
     update();
@@ -72,7 +70,7 @@ class MainController extends GetxController {
   Future getPolyclinics() async {
     isLoading = true;
     update();
-    polyclinics = await repository.getPolyclinics();
+    polyclinics = await FirestoreService.getPolyclinics();
     isLoading = false;
     update();
   }
@@ -80,7 +78,7 @@ class MainController extends GetxController {
   RefreshController refreshPoli = RefreshController(initialRefresh: false);
   onRefreshPoli() async {
     polyclinics.clear();
-    polyclinics = await repository.getPolyclinics();
+    polyclinics = await FirestoreService.getPolyclinics();
     refreshPoli.refreshCompleted();
     update();
   }

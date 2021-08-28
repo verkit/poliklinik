@@ -16,7 +16,7 @@ class CheckController extends GetxController {
   TextEditingController tanggal = TextEditingController();
   final formKey = GlobalKey<FormState>();
   bool isLoading = false;
-  // DoctorModel selectedDoctor = Get.find<MainController>().doctors.first;
+
   DoctorModel selectedDoctor = DoctorModel();
   selectDoctor(DoctorModel value) {
     selectedDoctor = value;
@@ -44,7 +44,7 @@ class CheckController extends GetxController {
     try {
       EasyLoading.show();
       if (formKey.currentState!.validate()) {
-        var antrian = await FirestoreService.getAmountChecks(selectedDoctor.nama!, tanggal.text);
+        var antrian = await FirestoreService.nomorAntrian(selectedDoctor, tanggal.text);
         Pasien pasien = Pasien();
         await AuthFirebase.getProfile(Get.put<AuthController>(AuthController()).user.value!.uid).then((value) async {
           pasien = value!;
@@ -53,7 +53,8 @@ class CheckController extends GetxController {
             pembayaran: selectedPembayaran,
             pasien: pasien,
             tanggalPeriksa: tanggal.text,
-            antrian: antrian,
+            antrian: antrian!.first,
+            antrian_poli: antrian.last,
             selesai: false,
             tanggalDaftar: DateFormat('dd-MM-yyyy').format(DateTime.now()),
           );
@@ -71,7 +72,7 @@ class CheckController extends GetxController {
   @override
   void onInit() async {
     isLoading = true;
-    Get.find<MainController>().doctors = await FirestoreService().getDoctors();
+    Get.find<MainController>().doctors = await FirestoreService.getDoctors();
     isLoading = false;
     update();
     super.onInit();

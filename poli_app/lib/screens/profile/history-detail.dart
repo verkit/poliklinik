@@ -109,18 +109,38 @@ class HistoryDetailScreen extends GetView<HistoryController> {
               ),
               SizedBox(height: 24),
               Center(
-                child: Column(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: 4.0),
-                      child: Text(
-                        'Antrian',
-                        style: TextStyle(fontSize: 16),
-                      ),
+                    Column(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 4.0),
+                          child: Text(
+                            'Antrian Registrasi',
+                            style: TextStyle(fontSize: 16),
+                          ),
+                        ),
+                        Text(
+                          controller.selectedCheck.antrian!.toString(),
+                          style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                        ),
+                      ],
                     ),
-                    Text(
-                      controller.selectedCheck.antrian!.toString(),
-                      style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                    Column(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 4.0),
+                          child: Text(
+                            'Antrian Poli',
+                            style: TextStyle(fontSize: 16),
+                          ),
+                        ),
+                        Text(
+                          controller.selectedCheck.antrian_poli!.toString(),
+                          style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                        ),
+                      ],
                     ),
                   ],
                 ),
