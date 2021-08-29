@@ -12,6 +12,8 @@ class CheckModel {
     this.antrian,
     this.antrian_poli,
     this.selesai,
+    this.selesai_poli,
+    this.id,
   });
 
   Pasien? pasien;
@@ -22,6 +24,8 @@ class CheckModel {
   int? antrian;
   int? antrian_poli;
   bool? selesai;
+  bool? selesai_poli;
+  String? id;
 
   factory CheckModel.fromRawJson(String str) => CheckModel.fromJson(json.decode(str));
 
@@ -36,6 +40,7 @@ class CheckModel {
         antrian: json["antrian"],
         antrian_poli: json["antrian_poli"],
         selesai: json["selesai"],
+        selesai_poli: json["selesai_poli"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -47,6 +52,7 @@ class CheckModel {
         "antrian": antrian,
         "antrian_poli": antrian_poli,
         "selesai": selesai,
+        "selesai_poli": selesai_poli,
       };
 }
 

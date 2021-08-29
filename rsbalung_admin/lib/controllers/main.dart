@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:rsbalung_admin/screens/about.dart';
 import 'package:rsbalung_admin/screens/doctor.dart';
 import 'package:rsbalung_admin/screens/home.dart';
+import 'package:rsbalung_admin/screens/pasien.dart';
 import 'package:rsbalung_admin/screens/polyclinic.dart';
 
 class MainController extends GetxController {
@@ -21,6 +22,7 @@ class MainController extends GetxController {
 
   List<Widget> widgets = <Widget>[
     HomeScreen(),
+    PasienScreen(),
     DoctorScreen(),
     PolyclinicScreen(),
     AboutScreen(),

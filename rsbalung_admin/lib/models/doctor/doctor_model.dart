@@ -10,20 +10,27 @@ class DoctorModel {
   DoctorModel({
     this.nama,
     this.dokter,
+    this.poliklinik,
     this.jenisKelamin,
     this.jadwal,
     this.id,
   });
 
-  String? id;
   String? nama;
   String? dokter;
+  String? poliklinik;
   String? jenisKelamin;
   List<Jadwal>? jadwal;
+  String? id;
+
+  factory DoctorModel.fromRawJson(String str) => DoctorModel.fromJson(json.decode(str));
+
+  String toRawJson() => json.encode(toJson());
 
   factory DoctorModel.fromJson(Map<String, dynamic> json) => DoctorModel(
         nama: json["nama"],
         dokter: json["dokter"],
+        poliklinik: json["poliklinik"],
         jenisKelamin: json["jenis_kelamin"],
         jadwal: List<Jadwal>.from(json["jadwal"].map((x) => Jadwal.fromJson(x))),
       );
@@ -33,6 +40,7 @@ class DoctorModel {
       id: snapshot.id,
       nama: snapshot.get('nama'),
       dokter: snapshot.get('dokter'),
+      poliklinik: snapshot.get('poliklinik'),
       jadwal: List<Jadwal>.from(snapshot.get('jadwal').map((x) => Jadwal.fromJson(x))),
       jenisKelamin: snapshot.get('jenis_kelamin'),
     );
@@ -41,6 +49,7 @@ class DoctorModel {
   Map<String, dynamic> toJson() => {
         "nama": nama,
         "dokter": dokter,
+        "poliklinik": poliklinik,
         "jenis_kelamin": jenisKelamin,
         "jadwal": List<dynamic>.from(jadwal!.map((x) => x.toJson())),
       };

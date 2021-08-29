@@ -122,10 +122,20 @@ class _HomeScreenState extends State<HomeScreen> {
                                                     style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
                                                   ),
                                                   Text(
-                                                    check.antrian!.toString(),
+                                                    _controller.role == 'pendaftaran'
+                                                        ? check.antrian!.toString()
+                                                        : check.antrian_poli!.toString(),
                                                     style: TextStyle(fontSize: 12),
                                                   ),
                                                 ],
+                                              ),
+                                              Text(
+                                                check.selesai_poli!
+                                                    ? 'Pemeriksaan selesai'
+                                                    : 'Belum melakukan pemeriksaan',
+                                                style: TextStyle(
+                                                  color: check.selesai_poli! ? Colors.green : Colors.red,
+                                                ),
                                               ),
                                               // SizedBox(height: 8),
                                               // Text(

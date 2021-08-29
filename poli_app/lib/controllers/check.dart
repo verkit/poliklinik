@@ -56,6 +56,7 @@ class CheckController extends GetxController {
             antrian: antrian!.first,
             antrian_poli: antrian.last,
             selesai: false,
+            selesai_poli: false,
             tanggalDaftar: DateFormat('dd-MM-yyyy').format(DateTime.now()),
           );
           await FirestoreService.registerForCheck(data).whenComplete(() {

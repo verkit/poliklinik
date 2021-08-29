@@ -18,6 +18,10 @@ class MainScreen extends GetView<MainController> {
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.person),
+              label: 'Pasien',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.person),
               label: 'Dokter',
             ),
             BottomNavigationBarItem(

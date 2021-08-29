@@ -11,7 +11,9 @@ class CheckModel {
     this.tanggalDaftar,
     this.dokter,
     this.antrian,
+    this.antrian_poli,
     this.selesai,
+    this.selesai_poli,
     this.id,
   });
 
@@ -21,7 +23,9 @@ class CheckModel {
   String? tanggalDaftar;
   DoctorModel? dokter;
   int? antrian;
+  int? antrian_poli;
   bool? selesai;
+  bool? selesai_poli;
   String? id;
 
   factory CheckModel.fromRawJson(String str) => CheckModel.fromJson(json.decode(str));
@@ -29,12 +33,16 @@ class CheckModel {
   String toRawJson() => json.encode(toJson());
 
   factory CheckModel.fromJson(Map<String, dynamic> json) => CheckModel(
-      pasien: Pasien.fromJson(json["pasien"]),
-      pembayaran: json["pembayaran"],
-      tanggalPeriksa: json["tanggal_periksa"],
-      tanggalDaftar: json["tanggal_daftar"],
-      dokter: DoctorModel.fromJson(json["dokter"]),
-      antrian: json["antrian"]);
+        pasien: Pasien.fromJson(json["pasien"]),
+        pembayaran: json["pembayaran"],
+        tanggalPeriksa: json["tanggal_periksa"],
+        tanggalDaftar: json["tanggal_daftar"],
+        dokter: DoctorModel.fromJson(json["dokter"]),
+        antrian: json["antrian"],
+        antrian_poli: json["antrian_poli"],
+        selesai: json["selesai"],
+        selesai_poli: json["selesai_poli"],
+      );
 
   factory CheckModel.fromSnapshot(DocumentSnapshot snapshot) => CheckModel(
         id: snapshot.id,
@@ -44,7 +52,9 @@ class CheckModel {
         tanggalDaftar: snapshot.get("tanggal_daftar"),
         dokter: DoctorModel.fromJson(snapshot.get("dokter")),
         antrian: snapshot.get("antrian"),
+        antrian_poli: snapshot.get("antrian_poli"),
         selesai: snapshot.get('selesai'),
+        selesai_poli: snapshot.get('selesai_poli'),
       );
 
   Map<String, dynamic> toJson() => {
@@ -54,7 +64,9 @@ class CheckModel {
         "tanggal_daftar": tanggalDaftar,
         "dokter": dokter!.toJson(),
         "antrian": antrian,
+        "antrian_poli": antrian_poli,
         "selesai": selesai,
+        "selesai_poli": selesai_poli,
       };
 }
 
@@ -110,6 +122,23 @@ class Pasien {
         noTelp: json["no_telp"],
         nik: json["nik"],
         userUid: json["user_uid"],
+      );
+
+  factory Pasien.fromSnapshot(DocumentSnapshot snapshot) => Pasien(
+        nama: snapshot.get("nama"),
+        tempatLahir: snapshot.get("tempat_lahir"),
+        tanggalLahir: snapshot.get("tanggal_lahir"),
+        umur: snapshot.get("umur"),
+        jenisKelamin: snapshot.get("jenis_kelamin"),
+        agama: snapshot.get("agama"),
+        alamat: snapshot.get("alamat"),
+        kelurahan: snapshot.get("kelurahan"),
+        kecamatan: snapshot.get("kecamatan"),
+        kabupaten: snapshot.get("kabupaten"),
+        provinsi: snapshot.get("provinsi"),
+        noTelp: snapshot.get("no_telp"),
+        nik: snapshot.get("nik"),
+        userUid: snapshot.id,
       );
 
   Map<String, dynamic> toJson() => {

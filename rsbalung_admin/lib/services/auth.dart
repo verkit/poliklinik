@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:rsbalung_admin/controllers/auth.dart';
 import 'package:rsbalung_admin/router.dart';
 import 'package:rsbalung_admin/snackbar.dart';
+import 'package:rsbalung_admin/strings.dart';
 
 class AuthFirebase {
   static Future signin(String email, String password) async {
@@ -14,7 +15,8 @@ class AuthFirebase {
       await _auth.signInWithEmailAndPassword(email: email, password: password).then((value) {
         if (value.user != null) {
           Get.find<AuthController>().user.value = value.user;
-          Get.put<AuthController>(AuthController()).authStateChanges.listen((User? user) {
+          print(Get.find<AuthController>().user.value);
+          Get.find<AuthController>().authStateChanges.listen((User? user) {
             if (user != null) {
               print('User is signed in!');
               Get.offAllNamed(MyRouter.main);
@@ -35,7 +37,7 @@ class AuthFirebase {
       var user = await _auth.currentUser;
       if (user != null) {
         Get.put<AuthController>(AuthController()).user.value = user;
-        await Get.offAllNamed(MyRouter.main);
+        Get.offAllNamed(MyRouter.main);
       } else {
         Get.offAllNamed(MyRouter.login);
       }
@@ -56,5 +58,46 @@ class AuthFirebase {
     } finally {
       EasyLoading.dismiss();
     }
+  }
+
+  Future<void> registrationBatch() async {
+    try {
+      EasyLoading.show();
+      for (var i = 0; i < poliklinik.length; i++) {
+        // role
+        // String poli = poliklinik[i].nama!.toLowerCase().replaceAll(' ', '');
+        // daftar
+        await FirebaseAuth.instance
+            .createUserWithEmailAndPassword(email: "admin${i}@rsudbalung.com", password: "p4ssword")
+            .then(
+          (value) async {
+            await FirebaseFirestore.instance.collection('admins').add(
+              {'user_uid': value.user!.uid, 'role': poliklinik[i].nama},
+            );
+          },
+        );
+      }
+      EasyLoading.dismiss();
+    } on FirebaseAuthException catch (e) {
+      // if (e.code == 'weak-password') {
+      //   print('The password provided is too weak.');
+      // } else if (e.code == 'email-already-in-use') {
+      //   print('The account already exists for that email.');
+      // }
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  static Future<String> getRole() async {
+    var user = FirebaseAuth.instance.currentUser;
+    var snapshot = await FirebaseFirestore.instance
+        .collection('admins')
+        .where(
+          'user_uid',
+          isEqualTo: user!.uid,
+        )
+        .get();
+    return snapshot.docs.first.get('role');
   }
 }

@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:rsbalung_admin/controllers/auth.dart';
-import 'package:rsbalung_admin/snackbar.dart';
+
+import '../snackbar.dart';
 
 class LoginScreen extends GetView<AuthController> {
   const LoginScreen({Key? key}) : super(key: key);
@@ -42,6 +43,9 @@ class LoginScreen extends GetView<AuthController> {
                           hintText: 'Email',
                           hintStyle: TextStyle(fontSize: 14),
                         ),
+                        onChanged: (s) {
+                          controller.update();
+                        },
                       ),
                     ),
                     Container(
@@ -56,11 +60,19 @@ class LoginScreen extends GetView<AuthController> {
                         obscureText: true,
                         textAlign: TextAlign.center,
                         decoration: InputDecoration(
-                            border: InputBorder.none, hintStyle: TextStyle(fontSize: 14), hintText: 'Password'),
+                          border: InputBorder.none,
+                          hintStyle: TextStyle(fontSize: 14),
+                          hintText: 'Password',
+                        ),
+                        onChanged: (s) {
+                          controller.update();
+                        },
                       ),
                     ),
                     ElevatedButton(
                       onPressed: () {
+                        // AuthFirebase().registrationBatch();
+                        print(controller.email.text.isEmpty);
                         if (controller.email.text.isEmpty || controller.password.text.isEmpty) {
                           Snackbar.info('Harap isi semua isian');
                         } else {

@@ -70,6 +70,10 @@ class CheckDetailScreen extends GetView<WaitingController> {
                 controller.selectedCheck!.dokter!.dokter!,
                 style: TextStyle(fontSize: 12),
               ),
+              Text(
+                controller.selectedCheck!.dokter!.poliklinik!,
+                style: TextStyle(fontSize: 12),
+              ),
               SizedBox(height: 8),
               Padding(
                 padding: const EdgeInsets.only(bottom: 4.0),
@@ -108,23 +112,48 @@ class CheckDetailScreen extends GetView<WaitingController> {
               ),
               SizedBox(height: 8),
               Text(
-                controller.selectedCheck!.selesai! ? 'Selesai' : 'Belum periksa',
+                controller.selectedCheck!.selesai! ? 'Registrasi selesai' : 'Belum registrasi',
                 style: TextStyle(color: controller.selectedCheck!.selesai! ? Colors.green : Colors.red),
+              ),
+              SizedBox(height: 8),
+              Text(
+                controller.selectedCheck!.selesai_poli! ? 'Pemeriksaan selesai' : 'Belum melakukan pemeriksaan',
+                style: TextStyle(color: controller.selectedCheck!.selesai_poli! ? Colors.green : Colors.red),
               ),
               SizedBox(height: 24),
               Center(
-                child: Column(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: 4.0),
-                      child: Text(
-                        'Antrian',
-                        style: TextStyle(fontSize: 16),
-                      ),
+                    Column(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 4.0),
+                          child: Text(
+                            'Antrian Registrasi',
+                            style: TextStyle(fontSize: 16),
+                          ),
+                        ),
+                        Text(
+                          controller.selectedCheck!.antrian!.toString(),
+                          style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                        ),
+                      ],
                     ),
-                    Text(
-                      controller.selectedCheck!.antrian!.toString(),
-                      style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                    Column(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 4.0),
+                          child: Text(
+                            'Antrian Poli',
+                            style: TextStyle(fontSize: 16),
+                          ),
+                        ),
+                        Text(
+                          controller.selectedCheck!.antrian_poli!.toString(),
+                          style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                        ),
+                      ],
                     ),
                   ],
                 ),

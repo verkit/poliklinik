@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:intl/intl.dart';
@@ -8,6 +9,7 @@ import 'package:path/path.dart' as p;
 import 'package:rsbalung_admin/models/check/check_model.dart';
 import 'package:rsbalung_admin/models/doctor/doctor_model.dart';
 import 'package:rsbalung_admin/models/polyclinic/polyclinic_model.dart';
+import 'package:rsbalung_admin/services/auth.dart';
 import 'package:rsbalung_admin/snackbar.dart';
 import 'package:rsbalung_admin/strings.dart';
 
@@ -34,25 +36,54 @@ class FirestoreService {
   }
 
   //!
-  //! HomePage
+  //! Pasien
   //!
-  Future<List<CheckModel>> checksToday(CheckModel data) async {
+  Future<List<Pasien>> getPatiens() async {
+    List<Pasien> data = [];
     try {
-      List<CheckModel> data = [];
-      var date = DateFormat('dd-MM-yyyy').format(DateTime.now());
-      await FirebaseFirestore.instance
-          .collection('checks')
-          .where('tanggal_periksa', isEqualTo: date)
-          .get()
-          .then((value) {
+      await FirebaseFirestore.instance.collection('users').get().then((value) {
         for (var item in value.docs) {
-          data.add(CheckModel.fromSnapshot(item));
+          data.add(Pasien.fromSnapshot(item));
         }
       });
       return data;
     } on FirebaseException catch (e) {
       Snackbar.error(e.message);
-      return [];
+      return data;
+    }
+  }
+
+  Future<List<CheckModel>> getPatienHistories(String uid) async {
+    List<CheckModel> data = [];
+    try {
+      await AuthFirebase.getRole().then((role) async {
+        if (role == 'pendaftaran') {
+          await FirebaseFirestore.instance
+              .collection('checks')
+              .where('pasien.user_uid', isEqualTo: uid)
+              .get()
+              .then((value) {
+            for (var item in value.docs) {
+              data.add(CheckModel.fromSnapshot(item));
+            }
+          });
+        } else {
+          await FirebaseFirestore.instance
+              .collection('checks')
+              .where('pasien.user_uid', isEqualTo: uid)
+              .where('dokter.poliklinik', isEqualTo: role)
+              .get()
+              .then((value) {
+            for (var item in value.docs) {
+              data.add(CheckModel.fromSnapshot(item));
+            }
+          });
+        }
+      });
+      return data;
+    } on FirebaseException catch (e) {
+      Snackbar.error(e.message);
+      return data;
     }
   }
 
@@ -215,20 +246,42 @@ class FirestoreService {
     List<CheckModel> data = [];
     try {
       var dateFormat = DateFormat('dd-MM-yyyy');
-      //Todo : ubah ini gan
-      await FirebaseFirestore.instance
-          .collection('checks')
-          // .where('tanggal_periksa', isEqualTo: dateFormat.format(DateTime.now()))
-          .where('selesai', isEqualTo: false)
-          .get()
-          .then((value) {
-        for (var item in value.docs) {
-          data.add(CheckModel.fromSnapshot(item));
+      await AuthFirebase.getRole().then((role) async {
+        if (role == 'pendaftaran') {
+          await FirebaseFirestore.instance
+              .collection('checks')
+              .where('tanggal_periksa', isEqualTo: dateFormat.format(DateTime.now()))
+              // .where('tanggal_periksa', isEqualTo: '28-08-2021')
+              .where('selesai', isEqualTo: false)
+              .get()
+              .then((value) {
+            for (var item in value.docs) {
+              data.add(CheckModel.fromSnapshot(item));
+            }
+          });
+          print(data.length);
+          return data;
+        } else {
+          await FirebaseFirestore.instance
+              .collection('checks')
+              .where('tanggal_periksa', isEqualTo: dateFormat.format(DateTime.now()))
+              // .where('tanggal_periksa', isEqualTo: '28-08-2021')
+              .where('dokter.poliklinik', isEqualTo: role)
+              // .where('selesai', isEqualTo: false)
+              .get()
+              .then((value) {
+            for (var item in value.docs) {
+              data.add(CheckModel.fromSnapshot(item));
+            }
+          });
+          print(data.length);
+          return data;
         }
       });
       return data;
     } on FirebaseException catch (e) {
       Snackbar.error(e.message);
+      print('catch');
       return data;
     }
   }

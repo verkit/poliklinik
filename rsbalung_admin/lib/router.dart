@@ -1,5 +1,6 @@
 import 'package:get/route_manager.dart';
 import 'package:rsbalung_admin/screens/check_detail.dart';
+import 'package:rsbalung_admin/screens/detail_pasien.dart';
 import 'package:rsbalung_admin/screens/form/doctor.dart';
 import 'package:rsbalung_admin/screens/form/polyclinic.dart';
 import 'package:rsbalung_admin/screens/home.dart';
@@ -17,6 +18,7 @@ class MyRouter {
   static String splash = '/splash';
   static String home = '/home';
   static String checkDetail = '/check-detail';
+  static String pasien = '/pasien';
 
   static final pages = [
     GetPage(name: formDoctor, page: () => FormDoctorScreen(), binding: DoctorBinding()),
@@ -26,5 +28,6 @@ class MyRouter {
     GetPage(name: splash, page: () => SplashScreen()),
     GetPage(name: home, page: () => HomeScreen()),
     GetPage(name: checkDetail, page: () => CheckDetailScreen()),
+    GetPage(name: pasien, page: () => DetailPasienScreen()),
   ];
 }
