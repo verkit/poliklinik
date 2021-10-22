@@ -25,6 +25,7 @@ List<String> jenisKelamin = [
 ];
 
 List<PolyclinicModel> poliklinik = [
+  PolyclinicModel(nama: 'pendaftaran'),
   PolyclinicModel(
     nama: 'Poliklinik Kebidanan dan Kandungan',
     gambar:

@@ -191,6 +191,30 @@ class FirestoreService {
     }
   }
 
+  Future<PolyclinicModel> getPolyclinicWithName(String name) async {
+    PolyclinicModel data = PolyclinicModel();
+    try {
+      var temp = await FirebaseFirestore.instance.collection('polyclinics').where('nama', isEqualTo: name).get();
+      data = PolyclinicModel.fromSnapshot(temp.docs.first);
+      print(data);
+      return data;
+    } on FirebaseException catch (e) {
+      Snackbar.error(e.message);
+      return data;
+    }
+  }
+
+  Future<void> updatePolyclinicWithName(PolyclinicModel data) async {
+    try {
+      EasyLoading.dismiss();
+      await FirebaseFirestore.instance.collection('polyclinics').doc(data.id).update(data.toJson());
+    } on FirebaseException catch (e) {
+      Snackbar.error(e.message);
+    } finally {
+      EasyLoading.dismiss();
+    }
+  }
+
   Future createPolyclinic(PolyclinicModel data, File file) async {
     try {
       var uploadImage = FirebaseStorage.instance.ref('poliklinik').child(p.basename(file.path));
@@ -242,7 +266,7 @@ class FirestoreService {
   //!
   //! Checks
   //!
-  Future<List<CheckModel>> getChecks() async {
+  Future<List<CheckModel>> getChecks({DateTime? date}) async {
     List<CheckModel> data = [];
     try {
       var dateFormat = DateFormat('dd-MM-yyyy');
@@ -250,8 +274,8 @@ class FirestoreService {
         if (role == 'pendaftaran') {
           await FirebaseFirestore.instance
               .collection('checks')
-              .where('tanggal_periksa', isEqualTo: dateFormat.format(DateTime.now()))
-              // .where('tanggal_periksa', isEqualTo: '28-08-2021')
+              .where('tanggal_periksa', isEqualTo: dateFormat.format(date ?? DateTime.now()))
+              // .where('tanggal_periksa', isEqualTo: '25-10-2021')
               .where('selesai', isEqualTo: false)
               .get()
               .then((value) {
@@ -264,8 +288,8 @@ class FirestoreService {
         } else {
           await FirebaseFirestore.instance
               .collection('checks')
-              .where('tanggal_periksa', isEqualTo: dateFormat.format(DateTime.now()))
-              // .where('tanggal_periksa', isEqualTo: '28-08-2021')
+              .where('tanggal_periksa', isEqualTo: dateFormat.format(date ?? DateTime.now()))
+              // .where('tanggal_periksa', isEqualTo: '25-10-2021')
               .where('dokter.poliklinik', isEqualTo: role)
               // .where('selesai', isEqualTo: false)
               .get()

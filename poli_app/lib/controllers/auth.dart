@@ -15,7 +15,7 @@ class AuthController extends GetxController {
 
   Stream<User?> authStateChanges = FirebaseAuth.instance.authStateChanges();
 
-  Rx<Pasien> profile = Pasien().obs;
+  Pasien? profile;
 
   void login(BuildContext context, String phoneNumber) async {
     final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -76,5 +76,13 @@ class AuthController extends GetxController {
   signOut() {
     AuthFirebase.signOut();
     update();
+  }
+
+  @override
+  void onInit() async {
+    if (FirebaseAuth.instance.currentUser != null) {
+      profile = await AuthFirebase.getProfile(FirebaseAuth.instance.currentUser!.uid);
+    }
+    super.onInit();
   }
 }

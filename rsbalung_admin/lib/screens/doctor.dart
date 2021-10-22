@@ -4,6 +4,8 @@ import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:rsbalung_admin/controllers/doctor.dart';
 import 'package:rsbalung_admin/services/firestore.dart';
 
+import 'form/doctor.dart';
+
 class DoctorScreen extends StatefulWidget {
   const DoctorScreen({Key? key}) : super(key: key);
 
@@ -13,6 +15,29 @@ class DoctorScreen extends StatefulWidget {
 
 class _DoctorScreenState extends State<DoctorScreen> {
   DoctorController _controller = Get.put<DoctorController>(DoctorController(FirestoreService()));
+  final FirestoreService repository = FirestoreService();
+  RefreshController refreshController = RefreshController(initialRefresh: false);
+
+  void onRefresh() async {
+    await Future.delayed(Duration(milliseconds: 1000));
+    _controller.doctors.clear();
+    _controller.doctors = await _controller.getDoctors();
+
+    refreshController.refreshCompleted();
+    setState(() {});
+  }
+
+  deleteDoctor(int i) {
+    repository.deleteDoctor(_controller.doctors[i].id!);
+    onRefresh();
+  }
+
+  @override
+  void dispose() {
+    refreshController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return GetBuilder<DoctorController>(
@@ -24,12 +49,16 @@ class _DoctorScreenState extends State<DoctorScreen> {
               ),
               floatingActionButton: FloatingActionButton(
                 backgroundColor: Colors.black,
-                onPressed: _controller.gotoForm,
+                onPressed: () => Get.to(() => FormDoctorScreen(isEdit: false))!.then((value) {
+                  if (value == true) {
+                    onRefresh();
+                  }
+                }),
                 child: Icon(Icons.add),
               ),
               body: SmartRefresher(
-                controller: _controller.refreshController,
-                onRefresh: _controller.onRefresh,
+                controller: refreshController,
+                onRefresh: onRefresh,
                 child: _controller.isLoading
                     ? Center(
                         child: CircularProgressIndicator(),
@@ -42,9 +71,9 @@ class _DoctorScreenState extends State<DoctorScreen> {
                             itemCount: _controller.doctors.length,
                             itemBuilder: (_, i) {
                               return Dismissible(
-                                key: Key(_controller.doctors[i].nama!),
+                                key: UniqueKey(),
                                 onDismissed: (DismissDirection direction) {
-                                  _controller.deleteDoctor(i);
+                                  deleteDoctor(i);
                                 },
                                 background: Container(
                                   padding: EdgeInsets.symmetric(horizontal: 16),
@@ -58,7 +87,13 @@ class _DoctorScreenState extends State<DoctorScreen> {
                                   ),
                                 ),
                                 child: InkWell(
-                                  onTap: () => _controller.gotoForm(data: _controller.doctors[i]),
+                                  onTap: () =>
+                                      Get.to(() => FormDoctorScreen(isEdit: true, data: _controller.doctors[i]))!
+                                          .then((value) {
+                                    if (value == true) {
+                                      onRefresh();
+                                    }
+                                  }),
                                   child: Column(
                                     children: [
                                       Padding(

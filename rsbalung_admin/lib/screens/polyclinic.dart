@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:rsbalung_admin/controllers/polyclinic.dart';
+import 'package:rsbalung_admin/screens/form/polyclinic.dart';
 import 'package:rsbalung_admin/services/firestore.dart';
 
 class PolyclinicScreen extends StatefulWidget {
@@ -14,6 +15,30 @@ class PolyclinicScreen extends StatefulWidget {
 
 class _PolyclinicScreenState extends State<PolyclinicScreen> {
   PolyController _controller = Get.put<PolyController>(PolyController(FirestoreService()));
+
+  final FirestoreService repository = FirestoreService();
+  RefreshController refreshController = RefreshController(initialRefresh: false);
+
+  onRefresh() async {
+    await Future.delayed(Duration(milliseconds: 1000));
+    _controller.polyclinics.clear();
+    _controller.polyclinics = await _controller.getPolyclinics();
+
+    refreshController.refreshCompleted();
+    setState(() {});
+  }
+
+  onDeletePoli(int i) {
+    repository.deletePolyclinic(_controller.polyclinics[i]);
+    onRefresh();
+  }
+
+  @override
+  void dispose() {
+    refreshController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return GetBuilder<PolyController>(
@@ -24,7 +49,11 @@ class _PolyclinicScreenState extends State<PolyclinicScreen> {
             title: Text('Poliklinik'),
           ),
           floatingActionButton: FloatingActionButton(
-            onPressed: _controller.gotoForm,
+            onPressed: () => Get.to(() => FormPolyclinicScreen())!.then((value) {
+              if (value == true) {
+                onRefresh();
+              }
+            }),
             backgroundColor: Colors.black,
             child: Icon(Icons.add),
           ),
@@ -37,15 +66,15 @@ class _PolyclinicScreenState extends State<PolyclinicScreen> {
                       child: Text('Belum ada poli'),
                     )
                   : SmartRefresher(
-                      controller: _controller.refreshController,
-                      onRefresh: _controller.onRefresh,
+                      controller: refreshController,
+                      onRefresh: onRefresh,
                       child: ListView.builder(
                         itemCount: _controller.polyclinics.length,
                         itemBuilder: (_, i) {
                           return Dismissible(
-                            key: Key(_controller.polyclinics[i].nama!),
+                            key: UniqueKey(),
                             onDismissed: (DismissDirection direction) {
-                              _controller.onDeletePoli(i);
+                              onDeletePoli(i);
                             },
                             background: Container(
                               padding: EdgeInsets.symmetric(horizontal: 16),
@@ -59,7 +88,12 @@ class _PolyclinicScreenState extends State<PolyclinicScreen> {
                               ),
                             ),
                             child: InkWell(
-                              onTap: () => _controller.gotoForm(data: _controller.polyclinics[i]),
+                              onTap: () =>
+                                  Get.to(() => FormPolyclinicScreen(data: _controller.polyclinics[i]))!.then((value) {
+                                if (value == true) {
+                                  onRefresh();
+                                }
+                              }),
                               child: Column(
                                 children: [
                                   Padding(

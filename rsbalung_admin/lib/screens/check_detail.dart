@@ -12,7 +12,15 @@ class CheckDetailScreen extends GetView<WaitingController> {
         title: Text('Detail Periksa'),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: controller.checkedWaitingList,
+        onPressed: () {
+          if (controller.role == 'pendaftaran') {
+            controller.selectedCheck!.selesai = true;
+          } else {
+            controller.selectedCheck!.selesai_poli = true;
+          }
+          controller.repository.updateCheck(controller.selectedCheck!);
+          Get.back();
+        },
         child: Icon(Icons.check),
       ),
       body: ListView(

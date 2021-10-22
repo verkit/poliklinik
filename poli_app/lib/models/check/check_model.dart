@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:poli_app/models/doctor/doctor_model.dart';
 
 class CheckModel {
@@ -42,6 +43,21 @@ class CheckModel {
         selesai: json["selesai"],
         selesai_poli: json["selesai_poli"],
       );
+
+  factory CheckModel.fromSnapshot(DocumentSnapshot snapshot) {
+    return CheckModel(
+      id: snapshot.id,
+      pasien: Pasien.fromJson(snapshot.get('pasien')),
+      pembayaran: snapshot.get('pembayaran'),
+      tanggalPeriksa: snapshot.get('tanggal_periksa'),
+      tanggalDaftar: snapshot.get('tanggal_daftar'),
+      dokter: DoctorModel.fromJson(snapshot.get('dokter')),
+      antrian: snapshot.get('antrian'),
+      antrian_poli: snapshot.get('antrian_poli'),
+      selesai: snapshot.get('selesai'),
+      selesai_poli: snapshot.get('selesai_poli'),
+    );
+  }
 
   Map<String, dynamic> toJson() => {
         "pasien": pasien!.toJson(),

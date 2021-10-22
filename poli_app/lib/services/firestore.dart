@@ -36,6 +36,23 @@ class FirestoreService {
     }
   }
 
+  static Future<List> checkRegistered(String date, Pasien pasien) async {
+    var snapshot =
+        await FirebaseFirestore.instance.collection('checks').where('tanggal_periksa', isEqualTo: date).get();
+
+    List<CheckModel> data = [];
+    for (var item in snapshot.docs) {
+      data.add(CheckModel.fromSnapshot(item));
+    }
+
+    if (data.where((e) => e.pasien!.userUid == pasien.userUid).toList().isNotEmpty)
+      return [false, 'Hanya bisa melakukan 1 kali pendaftaran'];
+
+    if (data.length >= 100) return [false, 'Pendaftaran penuh'];
+
+    return [true, ''];
+  }
+
   /// Mendapatkan total antrian pada tanggal yang sama
   static Future<List<int>?> nomorAntrian(DoctorModel dokter, String tanggal) async {
     try {
@@ -108,14 +125,26 @@ class FirestoreService {
   //!
   //! Polyclinic
   //!
-  static Future<List<PolyclinicModel>> getPolyclinics() async {
+  static Future<List<PolyclinicModel>> getPolyclinics({bool? open}) async {
     List<PolyclinicModel> data = [];
     try {
-      await FirebaseFirestore.instance.collection('polyclinics').get().then((value) {
-        for (var item in value.docs) {
-          data.add(PolyclinicModel.fromSnapshot(item));
-        }
-      });
+      if (open != null) {
+        await FirebaseFirestore.instance
+            .collection('polyclinics')
+            .where('is_open', isEqualTo: open)
+            .get()
+            .then((value) {
+          for (var item in value.docs) {
+            data.add(PolyclinicModel.fromSnapshot(item));
+          }
+        });
+      } else {
+        await FirebaseFirestore.instance.collection('polyclinics').get().then((value) {
+          for (var item in value.docs) {
+            data.add(PolyclinicModel.fromSnapshot(item));
+          }
+        });
+      }
       return data;
     } on FirebaseException catch (e) {
       Snackbar.error(e.message);
@@ -126,14 +155,23 @@ class FirestoreService {
   //!
   //! Doctor
   //!
-  static Future<List<DoctorModel>> getDoctors() async {
+  static Future<List<DoctorModel>> getDoctors({String? poli}) async {
     List<DoctorModel> data = [];
     try {
-      await FirebaseFirestore.instance.collection('doctors').get().then((value) {
-        for (var item in value.docs) {
-          data.add(DoctorModel.fromSnapshot(item));
-        }
-      });
+      if (poli != null) {
+        await FirebaseFirestore.instance.collection('doctors').where('poliklinik', isEqualTo: poli).get().then((value) {
+          for (var item in value.docs) {
+            data.add(DoctorModel.fromSnapshot(item));
+          }
+        });
+      } else {
+        await FirebaseFirestore.instance.collection('doctors').get().then((value) {
+          for (var item in value.docs) {
+            data.add(DoctorModel.fromSnapshot(item));
+          }
+        });
+      }
+
       return data;
     } on FirebaseException catch (e) {
       Snackbar.error(e.message);

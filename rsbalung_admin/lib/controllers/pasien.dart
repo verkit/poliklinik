@@ -1,5 +1,4 @@
 import 'package:get/get.dart';
-import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:rsbalung_admin/models/check/check_model.dart';
 import 'package:rsbalung_admin/router.dart';
 import 'package:rsbalung_admin/services/firestore.dart';
@@ -10,16 +9,6 @@ class PasienController extends GetxController {
 
   List<Pasien> patiens = [];
   bool isLoading = false;
-
-  RefreshController refreshController = RefreshController(initialRefresh: false);
-
-  void onRefresh() async {
-    await Future.delayed(Duration(milliseconds: 1000));
-    patiens.clear();
-    patiens = await getPasien();
-    update();
-    refreshController.refreshCompleted();
-  }
 
   Future<List<Pasien>> getPasien() async {
     patiens = await repository.getPatiens();

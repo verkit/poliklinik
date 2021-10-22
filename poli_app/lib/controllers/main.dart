@@ -5,8 +5,8 @@ import 'package:poli_app/models/doctor/doctor_model.dart';
 import 'package:poli_app/models/polyclinic/polyclinic_model.dart';
 import 'package:poli_app/router.dart';
 import 'package:poli_app/screens/about.dart';
-import 'package:poli_app/screens/home/doctor/profile.dart';
 import 'package:poli_app/screens/home/home.dart';
+import 'package:poli_app/screens/profile/profile.dart';
 import 'package:poli_app/services/firestore.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 

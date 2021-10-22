@@ -1,37 +1,53 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:intl/intl.dart';
-import 'package:poli_app/controllers/auth.dart';
-import 'package:poli_app/controllers/main.dart';
-import 'package:poli_app/models/check/check_model.dart';
 import 'package:poli_app/models/doctor/doctor_model.dart';
-import 'package:poli_app/router.dart';
-import 'package:poli_app/services/auth.dart';
+import 'package:poli_app/models/polyclinic/polyclinic_model.dart';
 import 'package:poli_app/services/firestore.dart';
-import 'package:poli_app/strings.dart';
 
 class CheckController extends GetxController {
-  TextEditingController tanggal = TextEditingController();
-  final formKey = GlobalKey<FormState>();
   bool isLoading = false;
 
-  DoctorModel selectedDoctor = DoctorModel();
-  selectDoctor(DoctorModel value) {
-    selectedDoctor = value;
+  List<PolyclinicModel> polys = [];
+  PolyclinicModel selectedPoli = PolyclinicModel();
+  selectPoli(PolyclinicModel value) async {
+    EasyLoading.show();
+    selectedPoli = value;
+    doctors = await FirestoreService.getDoctors(poli: selectedPoli.nama);
+    EasyLoading.dismiss();
     update();
   }
 
-  String selectedPembayaran = payments.first;
+  List<DoctorModel>? doctors;
+  DoctorModel? selectedDoctor;
+  selectDoctor(DoctorModel value) {
+    weekday.clear();
+    selectedDoctor = value;
+    for (var item in selectedDoctor!.jadwal!) {
+      if (item.hari == 'senin') {
+        weekday.add(1);
+      } else if (item.hari == 'selasa') {
+        weekday.add(2);
+      } else if (item.hari == 'rabu') {
+        weekday.add(3);
+      } else if (item.hari == 'kamis') {
+        weekday.add(4);
+      } else if (item.hari == 'jumat') {
+        weekday.add(5);
+      } else if (item.hari == 'sabtu') {
+        weekday.add(6);
+      } else {
+        weekday.add(7);
+      }
+    }
+    print(weekday.contains(7));
+    update();
+  }
+
+  String? selectedPembayaran;
   selectPembayaran(String value) {
     selectedPembayaran = value;
-    update();
-  }
-
-  String selectedJenisKelamin = jenisKelamin.first;
-  selectJenisKelamin(String value) {
-    selectedJenisKelamin = value;
     update();
   }
 
@@ -40,40 +56,12 @@ class CheckController extends GetxController {
     return dateFormat.format(date);
   }
 
-  registerForCheck() async {
-    try {
-      EasyLoading.show();
-      if (formKey.currentState!.validate()) {
-        var antrian = await FirestoreService.nomorAntrian(selectedDoctor, tanggal.text);
-        Pasien pasien = Pasien();
-        await AuthFirebase.getProfile(Get.put<AuthController>(AuthController()).user.value!.uid).then((value) async {
-          pasien = value!;
-          CheckModel data = CheckModel(
-            dokter: selectedDoctor,
-            pembayaran: selectedPembayaran,
-            pasien: pasien,
-            tanggalPeriksa: tanggal.text,
-            antrian: antrian!.first,
-            antrian_poli: antrian.last,
-            selesai: false,
-            selesai_poli: false,
-            tanggalDaftar: DateFormat('dd-MM-yyyy').format(DateTime.now()),
-          );
-          await FirestoreService.registerForCheck(data).whenComplete(() {
-            Get.put<MainController>(MainController()).selectedIndex.value = 2;
-            Get.offAllNamed(MyRouter.main);
-          });
-        });
-      }
-    } finally {
-      EasyLoading.dismiss();
-    }
-  }
+  List<int> weekday = [];
 
   @override
   void onInit() async {
     isLoading = true;
-    Get.find<MainController>().doctors = await FirestoreService.getDoctors();
+    polys = await FirestoreService.getPolyclinics(open: true);
     isLoading = false;
     update();
     super.onInit();

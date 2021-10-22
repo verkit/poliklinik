@@ -5,14 +5,16 @@ import 'package:equatable/equatable.dart';
 class PolyclinicModel extends Equatable {
   String? nama;
   String? gambar;
+  bool? open;
   String? id;
 
-  PolyclinicModel({this.nama, this.gambar, this.id});
+  PolyclinicModel({this.nama, this.gambar, this.id, this.open});
 
   factory PolyclinicModel.fromSnapshot(DocumentSnapshot snapshot) {
     return PolyclinicModel(
       gambar: snapshot.get('gambar'),
       nama: snapshot.get('nama'),
+      open: snapshot.get('is_open'),
       id: snapshot.id,
     );
   }
@@ -20,8 +22,9 @@ class PolyclinicModel extends Equatable {
   Map<String, dynamic> toJson() => {
         'nama': nama,
         'gambar': gambar,
+        'is_open': open,
       };
 
   @override
-  List<Object?> get props => [nama, gambar];
+  List<Object?> get props => [nama, gambar, open];
 }

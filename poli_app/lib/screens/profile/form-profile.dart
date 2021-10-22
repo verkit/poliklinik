@@ -9,6 +9,8 @@ class FormProfileScreen extends GetView<ProfileController> {
 
   @override
   Widget build(BuildContext context) {
+    final formKey = GlobalKey<FormState>();
+
     return Scaffold(
       appBar: AppBar(
         title: GetBuilder<ProfileController>(
@@ -30,7 +32,7 @@ class FormProfileScreen extends GetView<ProfileController> {
                     children: [
                       Text('Masukkan Identitas'),
                       Form(
-                        key: controller.formKey,
+                        key: formKey,
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -144,7 +146,11 @@ class FormProfileScreen extends GetView<ProfileController> {
                         ),
                       ),
                       ElevatedButton(
-                        onPressed: controller.updateProfile,
+                        onPressed: () {
+                          if (formKey.currentState!.validate()) {
+                            controller.updateProfile();
+                          }
+                        },
                         child: Text('Simpan'),
                         style: ElevatedButton.styleFrom(fixedSize: Size(Get.width, 40)),
                       )

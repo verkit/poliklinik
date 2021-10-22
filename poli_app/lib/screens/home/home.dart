@@ -120,7 +120,33 @@ class HomeScreen extends GetView<MainController> {
                 Container(color: Colors.grey[300], height: 1),
                 if (Get.put<AuthController>(AuthController()).user.value != null) ...[
                   InkWell(
-                    onTap: () => AuthFirebase.signOut(),
+                    onTap: () => showDialog(
+                        context: context,
+                        builder: (_) {
+                          return SimpleDialog(
+                            title: Center(child: Text('Yakin logout dari aplikasi?')),
+                            titleTextStyle: TextStyle(fontSize: 16, color: Colors.black),
+                            children: [
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  TextButton(
+                                    onPressed: () {
+                                      Get.back();
+                                    },
+                                    child: Text('Tidak'),
+                                  ),
+                                  TextButton(
+                                    onPressed: () {
+                                      AuthFirebase.signOut();
+                                    },
+                                    child: Text('Ya'),
+                                  )
+                                ],
+                              )
+                            ],
+                          );
+                        }),
                     child: ListTile(
                       contentPadding: EdgeInsets.zero,
                       leading: Padding(

@@ -31,7 +31,7 @@ class ProfileScreen extends GetView<AuthController> {
                 ),
               ),
               Text(controller.user.value!.phoneNumber!),
-              if (controller.user.value!.displayName == '') ...[
+              if (controller.profile!.nama != null || controller.profile!.nama != '') ...[
                 SizedBox(height: 2),
                 Text(
                   controller.user.value!.displayName!,

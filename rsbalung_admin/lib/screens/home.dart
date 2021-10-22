@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:rsbalung_admin/controllers/waiting.dart';
+import 'package:rsbalung_admin/screens/report.dart';
 import 'package:rsbalung_admin/services/firestore.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -11,11 +12,47 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   WaitingController _controller = Get.put<WaitingController>(WaitingController(FirestoreService()));
+  RefreshController refreshController = RefreshController(initialRefresh: false);
+
+  void onRefresh() async {
+    await Future.delayed(Duration(milliseconds: 1000));
+    _controller.checks.clear();
+    _controller.getChecks();
+
+    refreshController.refreshCompleted();
+    setState(() {});
+  }
+
+  checkedWaitingList() async {
+    if (_controller.role == 'pendaftaran') {
+      _controller.selectedCheck!.selesai = true;
+    } else {
+      _controller.selectedCheck!.selesai_poli = true;
+    }
+    _controller.repository.updateCheck(_controller.selectedCheck!);
+    Get.back();
+    onRefresh();
+  }
+
+  @override
+  void dispose() {
+    refreshController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text('Home'),
+        actions: [
+          IconButton(
+            onPressed: () {
+              Get.to(() => ReportScreen());
+            },
+            icon: Icon(Icons.print),
+          )
+        ],
       ),
       body: GetBuilder<WaitingController>(
         init: _controller,
@@ -25,38 +62,55 @@ class _HomeScreenState extends State<HomeScreen> {
                   child: CircularProgressIndicator(),
                 )
               : SmartRefresher(
-                  controller: _controller.refreshController,
-                  onRefresh: _controller.onRefresh,
-                  child: _controller.checks.isEmpty
-                      ? Center(
-                          child: Text('Tidak ada antrian hari ini'),
-                        )
-                      : SingleChildScrollView(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
+                  controller: refreshController,
+                  onRefresh: onRefresh,
+                  child: SingleChildScrollView(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(16.0) - EdgeInsets.only(bottom: 16),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Padding(
-                                padding: const EdgeInsets.all(16.0) - EdgeInsets.only(bottom: 16),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(
-                                      'Antrian hari ini',
-                                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
-                                    ),
-                                    Column(
-                                      children: [
-                                        Text('Nomor antrian'),
-                                        Text(
-                                          _controller.waitingNumber!.toString(),
-                                          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
-                                        ),
-                                      ],
-                                    ),
-                                  ],
-                                ),
+                              Text(
+                                'Antrian hari ini',
+                                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
                               ),
-                              ListView.builder(
+                              Row(
+                                children: [
+                                  Column(
+                                    children: [
+                                      Text('Antrian'),
+                                      Text(
+                                        _controller.waitingNumber!.toString(),
+                                        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                                      ),
+                                    ],
+                                  ),
+                                  SizedBox(width: 18),
+                                  Column(
+                                    children: [
+                                      Text('Kuota'),
+                                      Text(
+                                        _controller.kuota.toString(),
+                                        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                        _controller.checks.isEmpty
+                            ? SizedBox(
+                                height: Get.height * 0.7,
+                                child: Center(
+                                  child: Text('Tidak ada antrian hari ini'),
+                                ),
+                              )
+                            : ListView.builder(
                                 shrinkWrap: true,
                                 physics: BouncingScrollPhysics(),
                                 itemCount: _controller.checks.length,
@@ -150,9 +204,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                   );
                                 },
                               ),
-                            ],
-                          ),
-                        ),
+                      ],
+                    ),
+                  ),
                 );
         },
       ),

@@ -13,80 +13,100 @@ class PasienScreen extends StatefulWidget {
 
 class _PasienScreenState extends State<PasienScreen> {
   PasienController _controller = Get.put<PasienController>(PasienController(FirestoreService()));
+
+  RefreshController refreshController = RefreshController(initialRefresh: false);
+
+  void onRefresh() async {
+    await Future.delayed(Duration(milliseconds: 1000));
+    _controller.patiens.clear();
+    _controller.patiens = await _controller.getPasien();
+
+    refreshController.refreshCompleted();
+    setState(() {});
+  }
+
+  @override
+  void dispose() {
+    refreshController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return GetBuilder<PasienController>(
-        init: _controller,
-        builder: (_) {
-          return Scaffold(
-              appBar: AppBar(
-                title: Text('Daftar Pasien'),
-              ),
-              body: SmartRefresher(
-                controller: _controller.refreshController,
-                onRefresh: _controller.onRefresh,
-                child: _controller.isLoading
+      init: _controller,
+      builder: (_) {
+        return Scaffold(
+          appBar: AppBar(
+            title: Text('Daftar Pasien'),
+          ),
+          body: SmartRefresher(
+            controller: refreshController,
+            onRefresh: onRefresh,
+            child: _controller.isLoading
+                ? Center(
+                    child: CircularProgressIndicator(),
+                  )
+                : _controller.patiens.isEmpty
                     ? Center(
-                        child: CircularProgressIndicator(),
+                        child: Text('Belum ada pasien'),
                       )
-                    : _controller.patiens.isEmpty
-                        ? Center(
-                            child: Text('Belum ada pasien'),
-                          )
-                        : ListView.builder(
-                            itemCount: _controller.patiens.length,
-                            itemBuilder: (_, i) {
-                              return InkWell(
-                                onTap: () => _controller.gotoDetail(i),
-                                child: Column(
-                                  children: [
-                                    Padding(
-                                      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
-                                      child: Row(
-                                        children: [
-                                          ClipRRect(
-                                            borderRadius: BorderRadius.circular(24),
-                                            child: Image.asset(
-                                              _controller.patiens[i].jenisKelamin == "L"
-                                                  ? 'assets/dokter cowok.jpg'
-                                                  : 'assets/dokter cewek.jpg',
-                                              width: 48,
-                                              height: 48,
-                                              fit: BoxFit.cover,
-                                            ),
-                                          ),
-                                          SizedBox(width: 12),
-                                          Column(
-                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                            children: [
-                                              Text(
-                                                _controller.patiens[i].nama!,
-                                                maxLines: 1,
-                                              ),
-                                              SizedBox(height: 2),
-                                              Text(
-                                                _controller.patiens[i].alamat! +
-                                                    ', ' +
-                                                    _controller.patiens[i].kelurahan! +
-                                                    ', ' +
-                                                    _controller.patiens[i].kecamatan! +
-                                                    ', ' +
-                                                    _controller.patiens[i].kabupaten!,
-                                                style: TextStyle(fontSize: 13, color: Colors.grey),
-                                                maxLines: 2,
-                                              ),
-                                            ],
-                                          )
-                                        ],
+                    : ListView.builder(
+                        itemCount: _controller.patiens.length,
+                        itemBuilder: (_, i) {
+                          return InkWell(
+                            onTap: () => _controller.gotoDetail(i),
+                            child: Column(
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
+                                  child: Row(
+                                    children: [
+                                      ClipRRect(
+                                        borderRadius: BorderRadius.circular(24),
+                                        child: Image.asset(
+                                          _controller.patiens[i].jenisKelamin == "L"
+                                              ? 'assets/dokter cowok.jpg'
+                                              : 'assets/dokter cewek.jpg',
+                                          width: 48,
+                                          height: 48,
+                                          fit: BoxFit.cover,
+                                        ),
                                       ),
-                                    ),
-                                    Container(color: Colors.grey[300], height: 1),
-                                  ],
+                                      SizedBox(width: 12),
+                                      Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            _controller.patiens[i].nama!,
+                                            maxLines: 1,
+                                          ),
+                                          SizedBox(height: 2),
+                                          Text(
+                                            _controller.patiens[i].alamat! +
+                                                ', ' +
+                                                _controller.patiens[i].kelurahan! +
+                                                ', ' +
+                                                _controller.patiens[i].kecamatan! +
+                                                ', ' +
+                                                _controller.patiens[i].kabupaten!,
+                                            style: TextStyle(fontSize: 13, color: Colors.grey),
+                                            maxLines: 2,
+                                          ),
+                                        ],
+                                      )
+                                    ],
+                                  ),
                                 ),
-                              );
-                            },
-                          ),
-              ));
-        });
+                                Container(color: Colors.grey[300], height: 1),
+                              ],
+                            ),
+                          );
+                        },
+                      ),
+          ),
+        );
+      },
+    );
   }
 }

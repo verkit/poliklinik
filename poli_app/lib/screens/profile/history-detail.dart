@@ -145,6 +145,25 @@ class HistoryDetailScreen extends GetView<HistoryController> {
                   ],
                 ),
               ),
+              SizedBox(height: 24),
+              Center(
+                child: RichText(
+                  textAlign: TextAlign.center,
+                  text: TextSpan(
+                    text: 'Anda mendaftar pada poliklinik ',
+                    style: DefaultTextStyle.of(context).style,
+                    children: <TextSpan>[
+                      TextSpan(
+                        text: controller.selectedCheck.dokter!.poliklinik!,
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      TextSpan(text: '. Pelayanan poiliklinik dimulai jam '),
+                      TextSpan(text: '07.00 ', style: TextStyle(fontWeight: FontWeight.bold)),
+                      TextSpan(text: '. Silahkan datang 30 menit sebelum waktu pelayanan tiba'),
+                    ],
+                  ),
+                ),
+              ),
             ],
           ),
         ],

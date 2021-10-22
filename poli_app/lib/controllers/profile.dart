@@ -20,7 +20,6 @@ class ProfileController extends GetxController {
   TextEditingController kabupaten = TextEditingController();
   TextEditingController provinsi = TextEditingController();
   TextEditingController nik = TextEditingController();
-  final formKey = GlobalKey<FormState>();
 
   bool isLoading = false;
 
@@ -39,27 +38,26 @@ class ProfileController extends GetxController {
     try {
       EasyLoading.show();
       // await FirestoreService.createUser(Pasien(userUid: Get.find<AuthController>().user.value!.uid));
-      if (formKey.currentState!.validate()) {
-        Pasien data = Pasien(
-          agama: agama.text,
-          alamat: alamat.text,
-          jenisKelamin: selectedJenisKelamin,
-          kabupaten: kabupaten.text,
-          kecamatan: kecamatan.text,
-          kelurahan: kelurahan.text,
-          nama: nama.text,
-          nik: nik.text,
-          provinsi: provinsi.text,
-          tanggalLahir: tanggalLahir.text,
-          tempatLahir: tempatLahir.text,
-          umur: umur.text,
-          noTelp: Get.find<AuthController>().user.value!.phoneNumber,
-          userUid: Get.find<AuthController>().user.value!.uid,
-        );
-        Get.put<AuthController>(AuthController()).user.value!.updateDisplayName(nama.text);
-        await FirestoreService.updateUser(data);
-        Get.offAllNamed(MyRouter.main);
-      }
+
+      Pasien data = Pasien(
+        agama: agama.text,
+        alamat: alamat.text,
+        jenisKelamin: selectedJenisKelamin,
+        kabupaten: kabupaten.text,
+        kecamatan: kecamatan.text,
+        kelurahan: kelurahan.text,
+        nama: nama.text,
+        nik: nik.text,
+        provinsi: provinsi.text,
+        tanggalLahir: tanggalLahir.text,
+        tempatLahir: tempatLahir.text,
+        umur: umur.text,
+        noTelp: Get.find<AuthController>().user.value!.phoneNumber,
+        userUid: Get.find<AuthController>().user.value!.uid,
+      );
+      Get.put<AuthController>(AuthController()).user.value!.updateDisplayName(nama.text);
+      await FirestoreService.updateUser(data);
+      Get.offAllNamed(MyRouter.main);
     } finally {
       EasyLoading.dismiss();
     }

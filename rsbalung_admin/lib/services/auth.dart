@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:rsbalung_admin/controllers/auth.dart';
+import 'package:rsbalung_admin/models/account.dart';
 import 'package:rsbalung_admin/router.dart';
 import 'package:rsbalung_admin/snackbar.dart';
 import 'package:rsbalung_admin/strings.dart';
@@ -24,7 +25,41 @@ class AuthFirebase {
           });
         }
       });
-    } on FirebaseException catch (e) {
+    } on FirebaseAuthException catch (e) {
+      Snackbar.error(e.message);
+    } finally {
+      EasyLoading.dismiss();
+    }
+  }
+
+  static Future signup({
+    required String email,
+    required String password,
+    required String name,
+    required String gender,
+    required String address,
+    required String phone,
+    required String role,
+  }) async {
+    final FirebaseAuth _auth = FirebaseAuth.instance;
+    try {
+      EasyLoading.show();
+      var user = await _auth.createUserWithEmailAndPassword(email: email, password: password);
+
+      var firestore = FirebaseFirestore.instance;
+      UserAccount userAccount = UserAccount(
+        address: address,
+        gender: gender,
+        name: name,
+        phone: phone,
+        role: role,
+        uid: user.user!.uid,
+      );
+      await firestore.collection('admins').doc(user.user!.uid).set(userAccount.toJson());
+      Snackbar.success('Berhasil melakukan pendaftaran');
+      Future.delayed(Duration(seconds: 1));
+      Get.toNamed(MyRouter.login);
+    } on FirebaseAuthException catch (e) {
       Snackbar.error(e.message);
     } finally {
       EasyLoading.dismiss();
