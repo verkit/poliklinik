@@ -219,7 +219,9 @@ class _CheckScreenState extends State<CheckScreen> {
                                     EasyLoading.show();
 
                                     /// Melakukan pengecekan pendaftaran
-                                    Pasien? pasien;
+                                    Pasien? pasien = await AuthFirebase.getProfile(
+                                        Get.put<AuthController>(AuthController()).user.value!.uid);
+
                                     CheckModel data = CheckModel(
                                       dokter: controller.selectedDoctor,
                                       pembayaran: controller.selectedPembayaran,
@@ -229,9 +231,6 @@ class _CheckScreenState extends State<CheckScreen> {
                                       selesai_poli: false,
                                       tanggalDaftar: DateFormat('dd-MM-yyyy').format(DateTime.now()),
                                     );
-
-                                    pasien = await AuthFirebase.getProfile(
-                                        Get.put<AuthController>(AuthController()).user.value!.uid);
 
                                     List check = await FirestoreService.checkRegistered(tanggal.text, pasien!);
                                     if (!check.first) {
